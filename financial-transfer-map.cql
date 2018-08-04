@@ -75,5 +75,10 @@ CREATE (income1:Income {name: "Income 1", value: ""}),
 	   (bank2account1)-[:TRANSFER {value: 70}]->(loanprov5account1)
 
 // 
-MATCH ()-[r1:TRANSFER]->()-[r2:TRANSFER]-()
-RETURN sum(r1.value), sum(r2.value)
+MATCH ()-[r1:TRANSFER]->(n)-[r2:TRANSFER]->()
+WITH n, r1, r2, sum(r2.value) - sum(r1.value) AS acct_value
+SET n.value = acct_value
+RETURN n.name, 
+	   n.value,
+       sum(r2.value),
+       sum(r1.value)
