@@ -75,13 +75,16 @@ CREATE (income1:Income {name: "Income 1", value: ""}),
 	   (bank2account1)-[:TRANSFER {value: 70}]->(loanprov5account1)
 
 // update (:Account) nodes based on difference of sum of incoming and outgoing transfers
-
-// This query only sets value for node with TRANSFER on both sides. 
-// need to add another query or adjust this query to also handle the case where a node only has one
+MATCH (m)-[r3:TRANSFER]-()
+WITH m, sum(r3.value) AS sum_r3
+MATCH ()-[r4:TRANSFER]-(o)
+WITH m, sum_r3, o, sum(r4.value) AS sum_r4
 MATCH ()-[r1:TRANSFER]->(n)
-WITH n,  sum(r1.value) as sum_r1
+WITH m, sum_r3, o, sum_r4, n,  sum(r1.value) AS sum_r1
 MATCH (n)-[r2:TRANSFER]->()
-WITH n, sum_r1, sum(r2.value) AS sum_r2
+WITH m, sum_r3, o, sum_r4, n, sum_r1, sum(r2.value) AS sum_r2
+SET m.value = sum_r3
+SET o.value = sum_r4
 SET n.value = sum_r1 - sum_r2
 RETURN n.name, 
        n.value AS Value, // same as the difference
