@@ -91,3 +91,12 @@ SET n.value = sum_r1 - sum_r2
 //      sum_r1 AS Incoming,
 //      sum_r2 AS Outgoing
 //ORDER BY n.name
+
+//Query to report summary of (:Account), (:Income). and [:TRANSFER] values
+MATCH (m:Income)
+WITH m, sum(m.value) AS income_sum
+MATCH (n)
+WITH m, income_sum, n
+WHERE n.type = "Income" OR n.type = "Checking" OR n.type = "Savings" OR n.name = "Credit Card" OR n.type = "Loan"
+RETURN n.name, n.type, n.value, n.value / income_sum * 100.0 AS percent 
+ORDER BY n.value DESC
