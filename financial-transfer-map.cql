@@ -1,7 +1,7 @@
 // cypher file to create financial map
 
 // create institutions
-CREATE (income1:Income {name: "Income 1", value: "Income"}), 
+CREATE (income1:Income {name: "Income 1", type: "Income", value: 0.0}), 
 	   (bank1:Institution {name: "Bank 1", type: "Bank"}), 
 	   (bank2:Institution {name: "Bank 2", type: "Bank"}), 
 	   (bank3:Institution {name: "Bank 3", type: "Bank"}), 
@@ -13,25 +13,25 @@ CREATE (income1:Income {name: "Income 1", value: "Income"}),
 	   (loanprov4:Institution {name: "Loan Provider 4", type: "Loan Provider"}), 
 	   (loanprov5:Institution {name: "Loan Provider 5", type: "Loan Provider"}), 
 // create accounts
-	   (bank1account1:Account {name: "Bank 1 Account 1", type: "Checking", value: 0}), 
-	   (bank1account2:Account {name: "Bank 1 Account 2", type: "Savings", value: 0}), 
-	   (bank1account3:Account {name: "Bank 1 Account 3", type: "Credit Card", value: 0}), 
-	   (bank2account1:Account {name: "Bank 2 Account 1", type: "Checking", value: 0}), 
-	   (bank2account2:Account {name: "Bank 2 Account 2", type: "Credit Card", value: 0}), 
-	   (bank2account3:Account {name: "Bank 2 Account 3", type: "Credit Card", value: 0}), 
-	   (bank3account1:Account {name: "Bank 3 Account 1", type: "Savings", value: 0}), 
-	   (bank4account1:Account {name: "Bank 4 Account 1", type: "Savings", value: 0}), 
-	   (bank5account1:Account {name: "Bank 5 Account 1", type: "Checking", value: 0}), 
-	   (bank5account2:Account {name: "Bank 5 Account 2", type: "Savings", value: 0}), 
-	   (loanprov1account1:Account {name: "Loan Provider 1 Account 1", type: "Loan", value: 0}), 
-	   (loanprov2account1:Account {name: "Loan Provider 2 Account 1", type: "Loan", value: 0}), 
-	   (loanprov2account2:Account {name: "Loan Provider 2 Account 2", type: "Loan", value: 0}), 
-	   (loanprov2account3:Account {name: "Loan Provider 2 Account 3", type: "Loan", value: 0}), 
-	   (loanprov2account4:Account {name: "Loan Provider 2 Account 4", type: "Loan", value: 0}), 
-	   (loanprov2account5:Account {name: "Loan Provider 2 Account 5", type: "Loan", value: 0}), 
-	   (loanprov3account1:Account {name: "Loan Provider 3 Account 1", type: "Loan", value: 0}), 
-	   (loanprov4account1:Account {name: "Loan Provider 4 Account 1", type: "Loan", value: 0}), 
-	   (loanprov5account1:Account {name: "Loan Provider 5 Account 1 (Other)", type: "Loan", value: 0}), 
+	   (bank1account1:Account {name: "Bank 1 Account 1", type: "Checking", value: 0.0}), 
+	   (bank1account2:Account {name: "Bank 1 Account 2", type: "Savings", value: 0.0}), 
+	   (bank1account3:Account {name: "Bank 1 Account 3", type: "Credit Card", value: 0.0}), 
+	   (bank2account1:Account {name: "Bank 2 Account 1", type: "Checking", value: 0.0}), 
+	   (bank2account2:Account {name: "Bank 2 Account 2", type: "Credit Card", value: 0.0}), 
+	   (bank2account3:Account {name: "Bank 2 Account 3", type: "Credit Card", value: 0.0}), 
+	   (bank3account1:Account {name: "Bank 3 Account 1", type: "Savings", value: 0.0}), 
+	   (bank4account1:Account {name: "Bank 4 Account 1", type: "Savings", value: 0.0}), 
+	   (bank5account1:Account {name: "Bank 5 Account 1", type: "Checking", value: 0.0}), 
+	   (bank5account2:Account {name: "Bank 5 Account 2", type: "Savings", value: 0.0}), 
+	   (loanprov1account1:Account {name: "Loan Provider 1 Account 1", type: "Loan", value: 0.0}), 
+	   (loanprov2account1:Account {name: "Loan Provider 2 Account 1", type: "Loan", value: 0.0}), 
+	   (loanprov2account2:Account {name: "Loan Provider 2 Account 2", type: "Loan", value: 0.0}), 
+	   (loanprov2account3:Account {name: "Loan Provider 2 Account 3", type: "Loan", value: 0.0}), 
+	   (loanprov2account4:Account {name: "Loan Provider 2 Account 4", type: "Loan", value: 0.0}), 
+	   (loanprov2account5:Account {name: "Loan Provider 2 Account 5", type: "Loan", value: 0.0}), 
+	   (loanprov3account1:Account {name: "Loan Provider 3 Account 1", type: "Loan", value: 0.0}), 
+	   (loanprov4account1:Account {name: "Loan Provider 4 Account 1", type: "Loan", value: 0.0}), 
+	   (loanprov5account1:Account {name: "Loan Provider 5 Account 1 (Other)", type: "Loan", value: 0.0}), 
 // create bills
 		//(bill1:Bill {name: "", value: ""}),
 		//(bill2:Bill {name: "", value: ""}),
@@ -57,27 +57,27 @@ CREATE (income1:Income {name: "Income 1", value: "Income"}),
 	   (loanprov4account1)-[:ACCOUNT_OF]->(loanprov4),
 	   (loanprov5account1)-[:ACCOUNT_OF]->(loanprov5),
 // link transfers between accounts
-	   (income1)-[:TRANSFER {value: 100}]->(bank1account1), 
-	   (bank1account1)-[:TRANSFER {value: 90}]->(bank1account2), 
-	   (bank1account1)-[:TRANSFER {value: 80}]->(bank3account1), 
-	   (bank3account1)-[:TRANSFER {value: 70}]->(bank2account1), 
-	   (bank3account1)-[:TRANSFER {value: 60}]->(bank5account1), 
-	   (bank5account1)-[:TRANSFER {value: 50}]->(bank5account2), 
-	   (bank3account1)-[:TRANSFER {value: 40}]->(bank4account1), 
-	   (bank2account1)-[:TRANSFER {value: 30}]->(loanprov1account1),
-	   (bank2account1)-[:TRANSFER {value: 20}]->(loanprov2account1),
-	   (bank2account1)-[:TRANSFER {value: 10}]->(loanprov2account2),
-	   (bank2account1)-[:TRANSFER {value: 20}]->(loanprov2account3),
-	   (bank2account1)-[:TRANSFER {value: 30}]->(loanprov2account4),
-	   (bank2account1)-[:TRANSFER {value: 40}]->(loanprov2account5),
-	   (bank2account1)-[:TRANSFER {value: 50}]->(loanprov3account1),
-	   (bank2account1)-[:TRANSFER {value: 60}]->(loanprov4account1),
-	   (bank2account1)-[:TRANSFER {value: 70}]->(loanprov5account1)
+	   (income1)-[:TRANSFER {value: 1000.0}]->(bank1account1), 
+	   (bank1account1)-[:TRANSFER {value: 50.0}]->(bank1account2), 
+	   (bank1account1)-[:TRANSFER {value: 51.0}]->(bank3account1), 
+	   (bank3account1)-[:TRANSFER {value: 52.0}]->(bank2account1), 
+	   (bank3account1)-[:TRANSFER {value: 53.0}]->(bank5account1), 
+	   (bank5account1)-[:TRANSFER {value: 54.0}]->(bank5account2), 
+	   (bank3account1)-[:TRANSFER {value: 55.0}]->(bank4account1), 
+	   (bank2account1)-[:TRANSFER {value: 56.0}]->(loanprov1account1),
+	   (bank2account1)-[:TRANSFER {value: 57.0}]->(loanprov2account1),
+	   (bank2account1)-[:TRANSFER {value: 58.0}]->(loanprov2account2),
+	   (bank2account1)-[:TRANSFER {value: 59.0}]->(loanprov2account3),
+	   (bank2account1)-[:TRANSFER {value: 60.0}]->(loanprov2account4),
+	   (bank2account1)-[:TRANSFER {value: 59.0}]->(loanprov2account5),
+	   (bank2account1)-[:TRANSFER {value: 58.0}]->(loanprov3account1),
+	   (bank2account1)-[:TRANSFER {value: 57.0}]->(loanprov4account1),
+	   (bank2account1)-[:TRANSFER {value: 56.0}]->(loanprov5account1)
 
-// update (:Account) nodes based on difference of sum of incoming and outgoing transfers
-MATCH (m)-[r3:TRANSFER]-()
+// update (:Account) and (:Income) nodes based on difference of sum of incoming and outgoing transfers
+MATCH (m)-[r3:TRANSFER]->()
 WITH m, sum(r3.value) AS sum_r3
-MATCH ()-[r4:TRANSFER]-(o)
+MATCH ()-[r4:TRANSFER]->(o)
 WITH m, sum_r3, o, sum(r4.value) AS sum_r4
 MATCH ()-[r1:TRANSFER]->(n)
 WITH m, sum_r3, o, sum_r4, n,  sum(r1.value) AS sum_r1
