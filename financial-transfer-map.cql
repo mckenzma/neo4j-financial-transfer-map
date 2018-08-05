@@ -13,25 +13,25 @@ CREATE (income1:Income {name: "Income 1", value: ""}),
 	   (loanprov4:Institution {name: "Loan Provider 4", type: "Loan Provider"}), 
 	   (loanprov5:Institution {name: "Loan Provider 5", type: "Loan Provider"}), 
 // create accounts
-	   (bank1account1:Account {name: "Bank 1 Account 1", type: "Checking"}), 
-	   (bank1account2:Account {name: "Bank 1 Account 2", type: "Savings"}), 
-	   (bank1account3:Account {name: "Bank 1 Account 3", type: "Credit Card"}), 
-	   (bank2account1:Account {name: "Bank 2 Account 1", type: "Checking"}), 
-	   (bank2account2:Account {name: "Bank 2 Account 2", type: "Credit Card"}), 
-	   (bank2account3:Account {name: "Bank 2 Account 3", type: "Credit Card"}), 
-	   (bank3account1:Account {name: "Bank 3 Account 1", type: "Savings"}), 
-	   (bank4account1:Account {name: "Bank 4 Account 1", type: "Savings"}), 
-	   (bank5account1:Account {name: "Bank 5 Account 1", type: "Checking"}), 
-	   (bank5account2:Account {name: "Bank 5 Account 2", type: "Savings"}), 
-	   (loanprov1account1:Account {name: "Loan Provider 1 Account 1", type: "Loan"}), 
-	   (loanprov2account1:Account {name: "Loan Provider 2 Account 1", type: "Loan"}), 
-	   (loanprov2account2:Account {name: "Loan Provider 2 Account 2", type: "Loan"}), 
-	   (loanprov2account3:Account {name: "Loan Provider 2 Account 3", type: "Loan"}), 
-	   (loanprov2account4:Account {name: "Loan Provider 2 Account 4", type: "Loan"}), 
-	   (loanprov2account5:Account {name: "Loan Provider 2 Account 5", type: "Loan"}), 
-	   (loanprov3account1:Account {name: "Loan Provider 3 Account 1", type: "Loan"}), 
-	   (loanprov4account1:Account {name: "Loan Provider 4 Account 1", type: "Loan"}), 
-	   (loanprov5account1:Account {name: "Loan Provider 5 Account 1 (Other)", type: "Loan"}), 
+	   (bank1account1:Account {name: "Bank 1 Account 1", type: "Checking", value: 0}), 
+	   (bank1account2:Account {name: "Bank 1 Account 2", type: "Savings", value: 0}), 
+	   (bank1account3:Account {name: "Bank 1 Account 3", type: "Credit Card", value: 0}), 
+	   (bank2account1:Account {name: "Bank 2 Account 1", type: "Checking", value: 0}), 
+	   (bank2account2:Account {name: "Bank 2 Account 2", type: "Credit Card", value: 0}), 
+	   (bank2account3:Account {name: "Bank 2 Account 3", type: "Credit Card", value: 0}), 
+	   (bank3account1:Account {name: "Bank 3 Account 1", type: "Savings", value: 0}), 
+	   (bank4account1:Account {name: "Bank 4 Account 1", type: "Savings", value: 0}), 
+	   (bank5account1:Account {name: "Bank 5 Account 1", type: "Checking", value: 0}), 
+	   (bank5account2:Account {name: "Bank 5 Account 2", type: "Savings", value: 0}), 
+	   (loanprov1account1:Account {name: "Loan Provider 1 Account 1", type: "Loan", value: 0}), 
+	   (loanprov2account1:Account {name: "Loan Provider 2 Account 1", type: "Loan", value: 0}), 
+	   (loanprov2account2:Account {name: "Loan Provider 2 Account 2", type: "Loan", value: 0}), 
+	   (loanprov2account3:Account {name: "Loan Provider 2 Account 3", type: "Loan", value: 0}), 
+	   (loanprov2account4:Account {name: "Loan Provider 2 Account 4", type: "Loan", value: 0}), 
+	   (loanprov2account5:Account {name: "Loan Provider 2 Account 5", type: "Loan", value: 0}), 
+	   (loanprov3account1:Account {name: "Loan Provider 3 Account 1", type: "Loan", value: 0}), 
+	   (loanprov4account1:Account {name: "Loan Provider 4 Account 1", type: "Loan", value: 0}), 
+	   (loanprov5account1:Account {name: "Loan Provider 5 Account 1 (Other)", type: "Loan", value: 0}), 
 // create bills
 		//(bill1:Bill {name: "", value: ""}),
 		//(bill2:Bill {name: "", value: ""}),
@@ -74,11 +74,17 @@ CREATE (income1:Income {name: "Income 1", value: ""}),
 	   (bank2account1)-[:TRANSFER {value: 60}]->(loanprov4account1),
 	   (bank2account1)-[:TRANSFER {value: 70}]->(loanprov5account1)
 
-// 
-MATCH ()-[r1:TRANSFER]->(n)-[r2:TRANSFER]->()
-WITH n, r1, r2, sum(r2.value) - sum(r1.value) AS acct_value
-SET n.value = acct_value
+// update (:Account) nodes based on difference of sum of incoming and outgoing transfers
+
+// This query only sets value for node with TRANSFER on both sides. 
+// need to add another query or adjust this query to also handle the case where a node only has one
+MATCH ()-[r1:TRANSFER]->(n)
+WITH n,  sum(r1.value) as sum_r1
+MATCH (n)-[r2:TRANSFER]->()
+WITH n, sum_r1, sum(r2.value) AS sum_r2
+SET n.value = sum_r1 - sum_r2
 RETURN n.name, 
-	   n.value,
-       sum(r2.value),
-       sum(r1.value)
+       n.value AS Value, // same as the difference
+      sum_r1 AS Incoming,
+      sum_r2 AS Outgoing
+ORDER BY n.name
