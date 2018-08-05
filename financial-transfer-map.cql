@@ -1,7 +1,7 @@
 // cypher file to create financial map
 
 // create institutions
-CREATE (income1:Income {name: "Income 1", value: ""}), 
+CREATE (income1:Income {name: "Income 1", value: "Income"}), 
 	   (bank1:Institution {name: "Bank 1", type: "Bank"}), 
 	   (bank2:Institution {name: "Bank 2", type: "Bank"}), 
 	   (bank3:Institution {name: "Bank 3", type: "Bank"}), 
@@ -86,8 +86,8 @@ WITH m, sum_r3, o, sum_r4, n, sum_r1, sum(r2.value) AS sum_r2
 SET m.value = sum_r3
 SET o.value = sum_r4
 SET n.value = sum_r1 - sum_r2
-RETURN n.name, 
-       n.value AS Value, // same as the difference
-      sum_r1 AS Incoming,
-      sum_r2 AS Outgoing
-ORDER BY n.name
+//RETURN n.name, 
+//       n.value AS Value, // same as the difference
+//      sum_r1 AS Incoming,
+//      sum_r2 AS Outgoing
+//ORDER BY n.name
