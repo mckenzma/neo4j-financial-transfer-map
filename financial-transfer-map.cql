@@ -33,9 +33,9 @@ CREATE (income1:Income {name: "Income 1", type: "Income", value: 0.0}),
 	   (loanprov4account1:Account {name: "Loan Provider 4 Account 1", type: "Loan", value: 0.0}), 
 	   (loanprov5account1:Account {name: "Loan Provider 5 Account 1 (Other)", type: "Loan", value: 0.0}), 
 // create bills
-		//(bill1:Bill {name: "", value: ""}),
-		//(bill2:Bill {name: "", value: ""}),
-		//(bill3:Bill {name: "", value: ""}),
+		(bill1:Bill {name: "Bill 1", type: "Bill", value: 0}),
+		(bill2:Bill {name: "Bill 2", type: "Bill", value: 0}),
+		(bill3:Bill {name: "Bill 3", type: "Bill", value: 0}),
 // link accounts to institutions
 	   (bank1account1)-[:ACCOUNT_OF]->(bank1),
 	   (bank1account2)-[:ACCOUNT_OF]->(bank1),
@@ -72,7 +72,10 @@ CREATE (income1:Income {name: "Income 1", type: "Income", value: 0.0}),
 	   (bank2account1)-[:TRANSFER {value: 59.0}]->(loanprov2account5),
 	   (bank2account1)-[:TRANSFER {value: 58.0}]->(loanprov3account1),
 	   (bank2account1)-[:TRANSFER {value: 57.0}]->(loanprov4account1),
-	   (bank2account1)-[:TRANSFER {value: 56.0}]->(loanprov5account1)
+	   (bank2account1)-[:TRANSFER {value: 56.0}]->(loanprov5account1),
+	   (bank2account1)-[:TRANSFER {value: 5.0}]->(bill1),
+	   (bank2account1)-[:TRANSFER {value: 4.0}]->(bill2),
+	   (bank2account1)-[:TRANSFER {value: 3.5}]->(bill3)
 
 // update (:Account) and (:Income) nodes based on difference of sum of incoming and outgoing transfers
 MATCH (m)-[r3:TRANSFER]->()
@@ -97,6 +100,6 @@ MATCH (m:Income)
 WITH m, sum(m.value) AS income_sum
 MATCH (n)
 WITH m, income_sum, n
-WHERE n.type = "Income" OR n.type = "Checking" OR n.type = "Savings" OR n.name = "Credit Card" OR n.type = "Loan"
+WHERE n.type = "Income" OR n.type = "Checking" OR n.type = "Savings" OR n.type = "Credit Card" OR n.type = "Loan" OR n.type = "Bill"
 RETURN n.name, n.type, n.value, n.value / income_sum * 100.0 AS percent 
 ORDER BY n.value DESC
